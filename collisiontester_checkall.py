@@ -1,0 +1,64 @@
+import unittest
+import importlib
+import glob
+import io
+import sys
+import json
+
+import collision_tester
+
+SUPPRESS_OUTPUT = False 
+
+
+def check_all_files():
+    passed, failed = [], []
+
+    Programs = glob.glob('collisionc*')
+    for file_name in Programs:
+        if "hard" in file_name: continue
+
+        loader = unittest.loader.TestLoader()
+        results = unittest.result.TestResult()
+
+        try:
+
+            if SUPPRESS_OUTPUT:
+                s = io.StringIO()
+                sys.stdout = s
+
+            collision_tester.PROGRAM_TO_TEST = file_name
+
+            tests = loader.loadTestsFromTestCase(
+                collision_tester.CollisionTestCase)
+
+            tests.run(results)
+
+            tests_passed = results.testsRun - len(results.failures) - len(
+                results.errors)
+
+            if results.wasSuccessful():
+                passed.append(file_name)
+            else:
+                failed.append(file_name)
+            if SUPPRESS_OUTPUT:
+                sys.stdout = sys.__stdout__
+
+        except Exception as e:
+            if SUPPRESS_OUTPUT:
+                sys.stdout = sys.__stdout__
+
+            print('exception', file_name, e)
+            failed.append(file_name)
+
+    return passed, failed
+
+
+if __name__ == "__main__":
+    passed, failed = check_all_files()
+    Results = {
+        'failed': failed,
+        'passed': passed,
+        'authors': collision_tester.AUTHORS
+    }
+    with open('collisiontest_results.json', 'w') as f:
+        json.dump(Results, f, indent=4)
