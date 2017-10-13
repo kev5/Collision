@@ -6,7 +6,7 @@ import subprocess
 
 AUTHORS = ['harishns@bu.edu', 'kevalk@bu.edu', 'dkava@bu.edu']
 
-PROGRAM_TO_TEST = "run_program.py"
+PROGRAM_TO_TEST = "test_program.py"
 
 def runprogram(program, args, inputstr):
     coll_run = subprocess.run(
