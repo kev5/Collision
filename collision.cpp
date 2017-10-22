@@ -23,27 +23,39 @@ int main (int argcount, char **time)
   vector<float> t;
   stringstream ss;
 
-	// if(argv!=NULL)
-	// {
-	// 	while(getline(ss,inputs,'\n')){
-	// 		cout<<inputs<<endl;
-	// 	}
-	// }
+  //loop for storing the time values
+  for(int i=1;time[i]!=NULL;i++)
+  {
+  	ss<<time[i];
+    ss>>ti;
+  	if(ss.fail())
+    	return 2;
+    t.push_back(ti);
+    ss.str("");
+    ss.clear();
+    
+  }
 
-	// //new positions when they are not colliding
-	// for(int j=0;j<(argc-1);j++)
-	// {
-	// 	for(int i=0;i<(time[j]);i++)
-	// 	{
-	// 		newp1x[j]=v1x*time[j];
-	// 		newp2x[j]=v2x*time[j];
+  //loop for storing the ID, positions, velocities
+  while(!cin.eof())
+  {
+  	getline (cin,mystr);
+  	if(mystr.length()!=0)
+  	{
+    	stringstream ss;
+    	ss<<mystr;
+    	ss>>idi>>xi>>yi>>vxi>>vyi;
+    	if(ss.fail())
+      		return 1;
+    id.push_back(idi);
+    x.push_back(xi);
+    y.push_back(yi);
+    vx.push_back(vxi);
+    vy.push_back(vyi);
+  }  
+}
 
-	// 		newp1y[j]=v1y*time[j];
-	// 		newp2y[j]=v2y*time[j];
-	// 	}
 
-	// 	//velocities remain same
-	// }
 	
 int main(){
 
