@@ -67,8 +67,9 @@ for(int i=0; i<t.size();i++)
   	}
 }
   	
- cout<<ct<<endl;
+cout<<ct<<endl;
 
+/*
 int main(){
 	float p1x, p2x, p1y, p2y, v1x, v2x, v1y, v2y;
 	cout<<"Enter p1x: ";
@@ -124,3 +125,4 @@ int main(){
 	cout<<newv2x<<'\n';
 	cout<<newv2y<<'\n';
 }
+*/
