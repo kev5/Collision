@@ -55,6 +55,8 @@ int main (int argcount, char **time)
   }  
 }
 
+float ct; 
+ct = col_time(x[0], x[1], y[0], y[1], vx[0], vx[1], vy[0], vy[1]);
 
 	
 int main(){
