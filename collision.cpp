@@ -1,31 +1,27 @@
 // Copyright 2017 Keval_Khara kevalk@bu.edu
 
-#include <iostream>
+#include <iostream> 
+#include <string> 
+#include <sstream> 
 #include <vector>
-#include <sstream>
+#include <math.h>
+//#include <typeinfo>
 
-using namespace std;
+using namespace std; 
 
-vector<int> inputs;
+float col_time(float,float,float,float,float,float,float,float);
 
-//int main(int argc, char* argv[])
-//{
-
-
-
-	// int time[argc-1];
-	// //stringstream ss(argv);
-	// string x;
-
-	// for(int i=0;i<(argc-1);i++)			//loop to store all the input time values
-	// {
-	// 	time[i]=atoi(argv[i+1]);
-	// }
-
-	// while(cin>>x)
-	// {
-	// 	inputs.push_back(x);
-	// }
+int main (int argcount, char **time) 
+{ 
+  string mystr,idi; 
+  float xi,yi,vxi,vyi,ti;
+  vector<string> id; 
+  vector<float> x;
+  vector<float> y;
+  vector<float> vx;
+  vector<float> vy;
+  vector<float> t;
+  stringstream ss;
 
 	// if(argv!=NULL)
 	// {
