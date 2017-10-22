@@ -58,10 +58,18 @@ int main (int argcount, char **time)
 float ct; 
 ct = col_time(x[0], x[1], y[0], y[1], vx[0], vx[1], vy[0], vy[1]);
 
-	
+for(int i=0; i<t.size();i++)
+{
+  	cout<<t[i]<<" "<<endl;
+  	for(int i=0; i<x.size();i++)
+  	{
+  		cout<<x[i]<<" "<<endl;
+  	}
+}
+  	
+ cout<<ct<<endl;
+
 int main(){
-
-
 	float p1x, p2x, p1y, p2y, v1x, v2x, v1y, v2y;
 	cout<<"Enter p1x: ";
 	cin>>p1x;
@@ -115,6 +123,4 @@ int main(){
 	cout<<newv1y<<'\n';
 	cout<<newv2x<<'\n';
 	cout<<newv2y<<'\n';
-
-
 }
