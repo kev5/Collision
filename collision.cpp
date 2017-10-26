@@ -91,3 +91,72 @@ double particle::timeToCollision(const particle &other) {
 		timeToCollision = -1.0; 
 	return timeToCollision;
 }
+
+// dictionary for each pair and their collision time
+struct col2parts {
+	int pair[2];
+	double collisionTime;
+};
+// for multiple particles
+class multpart
+{
+public:
+	multpart();
+	double time_inputs[1000];
+	double current_time;
+	double final_time;
+	particle particles[1000];
+	int particle_count;
+	int ti_count;
+	void update(double dt);		// update positions
+	double nextCollisionTime;	// next collision time
+	particle col_parts[2];
+	col2parts nextcol_time(double current_time);
+	void print(double current_time);
+	void multpart_exec();
+};
+
+multpart::multpart() {}
+
+void multpart::update(double dt) {
+	for (int i = 0;i < this->particle_count;i++) 
+		this->particles[i].pos_update(dt);
+}
+
+col2parts multpart::nextcol_time(double cur_time) {
+	int i, j, pairnumber = 0;
+	pairnumber = particle_count * (particle_count-1)/2;		//n(n-1)/2
+	double nocol_time = 1e20;			// when no collision will occur
+	double temp = 0.0;
+	col2parts col_array[pairnumber];
+	col2parts parties;
+	int pair_count = 0;
+	for (i = 0; i < particle_count-1; i++) {
+		for (j = i + 1; j < particle_count; j++) {
+			temp = particles[i].timeToCollision(particles[j]);
+			col_array[pair_count].collisionTime = temp;
+			col_array[pair_count].pair[0] = i;
+			col_array[pair_count].pair[1] = j;
+			if (temp != -1 && temp <= nocol_time) 
+				nocol_time = temp;
+			pair_count++;
+		}
+	}
+	if (nocol_time == 1e20) {
+		parties.pair[0] = 0;
+		parties.pair[1] = 0;
+		parties.collisionTime = 1e20;
+	}
+	else {
+		for (i = 0; i < pair_count; i++) {
+			if (col_array[i].collisionTime == nocol_time) {
+				parties.pair[0] = col_array[i].pair[0];
+				parties.pair[1] = col_array[i].pair[1];
+				parties.collisionTime = nocol_time + cur_time;
+			}
+			else 
+				continue;
+		}
+	}
+	return parties;
+};
