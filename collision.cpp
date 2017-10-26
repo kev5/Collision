@@ -1,197 +1,93 @@
 #include <iostream>
-#include <vector>
-#include <string>
 #include <sstream>
 #include <math.h>
+#include <string>
+#include <algorithm>
+using namespace std;
 
-int main(int argumentcount, char **arguments)
+class Vector 
 {
-//particle names vector
-std::vector<std::string> nametokens;
-//X,Y vector vectors
-std::vector<float> Xv;
-std::vector<float> Yv;
-//X,Y Position vectors
-std::vector<float> X;
-std::vector<float> Y;
-//vector for time args
-std::vector<std::string> cmdLineTime;
-//individual input string for handling
-std::string lineString;
-//holders for apending vectors
-std::string itemName;
-float g,vol1,vol2,timex,pos1,pos2;
-std::string::size_type sz;
-std::string kk;
-int args,timetot,i,parttotal,j,k,h;
-//skips first argument which is program name
-int argCount = 1;
-int partnum=0;
-int checkinit = 0;
-//loop placing times entered at run in vectors
-
-for(args=(argumentcount-1); args>=1; args--)
-{//minus 1 argumentcount for programname accounting.
-	lineString=arguments[argCount];
-	if((std::isalpha(lineString[0])))
-	{
-		std::cout << "enterd \n";
-		return 2;
-
+public:
+	double x, y;
+	Vector(double q, double w) {		// constructor
+		x = q;
+		y = w;
+	};
+	Vector operator+(const Vector& other) const {
+		return Vector(this->x + other.x, this->y + other.y);
 	}
-	else
-	{
-	cmdLineTime.push_back(arguments[argCount]);
-	std::cout <<arguments[argCount] << '\n';
-	argCount++;
+	Vector operator-(const Vector& other) const {
+		return Vector(this->x - other.x, this->y - other.y);
 	}
-}
-std::cout << "enter values \n";
-
-//while loop for entering particles
-while(getline (std::cin, lineString))
-{//loop checking for input strings
-//std::cout <<lineString << "\n";
-std::stringstream D (lineString);
-
-
-//count number of tolkens
-
-int numspaces = 0;
-//char nextChar;
-int ischar = 0;
-for (int i=0; i<int(lineString.length()); i++)
-	{// checks each character in the string
-		//nextChar = lineString.at(i); // gets a character
-			if (isspace(lineString[i]))
-			{//if space add to numofspaces
-			numspaces++;
-			}
-			if((numspaces >= 1) && (std::isalpha(lineString[i])))
-			{//after first space if a letter set is char to return 1
-				ischar++;
-			}
+	Vector operator*(const double& c ) const {
+		return Vector(this->x * c, this->y * c);
 	}
-numspaces+=1;//add 1 for total token count
-
-if((numspaces<=4) || (numspaces>=6) || (ischar>0))
-	{//checks if there are anything other than 5 total arguements or
-	 // a letter in number spot
-	return 1;
+	Vector operator/(const double& c) const {
+		return Vector(this->x / c, this->y / c);
 	}
-else
-	{
-	for(int i=1; i<=5; i++)
-		{//push each tolken into a vector cout for troubleshooting
-			if (i==1)
-				{
-				D >> itemName;
-				nametokens.push_back(itemName);
-				//std::cout<<itemName<<"\n";
-				}
-			else if (i==2)
-			{
-				D >> g;
-				X.push_back(g);
-				//std::cout<<g<<"\n";
-			}
-			else if (i==3)
-			{
-				D >> g;
-				Y.push_back(g);
-				//std::cout<<g<<"\n";
-			}
-			else if (i==4)
-			{
-				D >> g;
-				Xv.push_back(g);
-				//std::cout<<g<<"\n";
-			}
-			else if (i==5)
-			{
-				D >> g;
-				Yv.push_back(g);
-				//std::cout<<g<<"\n";
-			}
-		}
-
-
-	}//else ends
-std::cout << "enter values \n";
-
-
-
-}//while ends
-
-int nocoll =0; //change to a 1 if collision detected and keep added for more than 1
-
-while(!checkinit)
-{//checking for initial postion overlap
-	//xposition example
-	//a h b; a h c; a h d
-	//b h c; b h d;
-	//c h d
-	// h=sqrt(x**2 + y**2)
-	//if no over lap checkinit = 1, if not return 1;
-	parttotal = nametokens.size() -1;// total number of particles starting w/ 0
-	for(i=0; i<=(parttotal);i++) //minus one for last comparison is skipped
-	{//move to next vector to multiply
-		j=i;
-		for(j=j+1; j<parttotal;j++)//j=1 to skip  over current pos values
-			{//calculated a H b , a H c, a H total
-			pos1 = X[j] - X[j-1];
-			pos2 = Y[j] - Y[j -1];
-			pos1 = pos1 * pos1;
-			pos2 = pos2 * pos2;
-			pos1= pos1 + pos2;
-			h=sqrt(pos1);
-			std::cout<<h<<"\n";
-			if(h<=10)
-				{//if particles overlap return a 1
-				nocoll=1;
-				}
-			}
+	double normalize() {
+		return sqrt(this->x * this->x + this->y *  this->y);
 	}
-		checkinit = 1;
+	double dot(const Vector& b) {
+		return (this->x*b.x + this->y*b.y);
+	}
+};
+
+class particle        		// attributes of a particle
+{
+public:
+	particle(){};
+	string pID;
+	double x_pos, y_pos, x_vel, y_vel;
+	void pos_update(double dt);		// dt is the time elapsed between 2 time inputs
+	void Collision(particle &other);
+	double Distance(const particle &other);
+	double timeToCollision(const particle &other);
+	void print();
+};
+
+void particle:: pos_update(double dt) {
+	x_pos = x_pos + x_vel * dt;
+	y_pos = y_pos + y_vel * dt;
 }
 
-
-
-
-
-if(!nocoll)
-{//if there are no collisions detected
-	timetot= cmdLineTime.size() - 1;//number of times entered
-	parttotal = nametokens.size() -1;
-	for(i=0; i<=timetot; i++)
-		{//loop over all entered times
-			kk = cmdLineTime[i];
-			timex= std::stof(kk, &sz);
-				for(partnum=0; partnum<=parttotal; partnum++)
-					{//loop over one particle
-						//X cords movement by time
-						pos1 = X[partnum];
-						vol1= Xv[partnum];
-						X[partnum] = pos1 + (vol1*timex);
-						//Y cords movement by time
-						pos1 = Y[partnum];
-						vol1= Yv[partnum];
-						Y[partnum] = pos1 + (vol1*timex);
-						//particle moved
-						std::cout<<"particle moved"<<"\n";
-						std::cout<< nametokens[partnum]<<" "<<X[partnum]<<" "<<Y[partnum]<<" "<< Xv[partnum]<< " "<<Yv[partnum]<<"\n";
-
-					}
-		}
+void particle::print() {
+	cout << pID << ' ' << x_pos << ' ' << y_pos << ' ' << x_vel << ' ' << y_vel << endl;
+}
+// implementing the collision formula using vectors
+void particle::Collision(particle &other) {
+	Vector p1 = Vector(this->x_pos, this->y_pos);
+	Vector p2 = Vector(other.x_pos, other.y_pos);
+	Vector v1 = Vector(this->x_vel, this->y_vel);
+	Vector v2 = Vector(other.x_vel, other.y_vel);
+	Vector axis1 = (p2 - p1);
+	Vector axis2 = (p1 - p2);
+	Vector v1axis = axis1 * (v1.dot(axis1)) / this->Distance(other);
+	Vector v2axis = axis2 * (v2.dot(axis2)) / this->Distance(other);
+	this->x_vel = (v2axis + v1 - v1axis).x;
+	this->y_vel = (v2axis + v1 - v1axis).y;
+	other.x_vel = (v1axis + v2 - v2axis).x;
+	other.y_vel = (v1axis + v2 - v2axis).y;
 }
 
-
-}//main ends
-
-
-
-/* find time where there would be a collison,
- * fingure out collosion,
- * then move time forward.
- * for simple answer v1 = v2 ; v2 = v1
- */
+double particle::Distance(const particle &other) {
+	double distance;
+	distance = pow((this->x_pos - other.x_pos),2) + pow((this->y_pos - other.y_pos),2);
+	return distance;
+};
+// calculating the time to collision
+double particle::timeToCollision(const particle &other) {
+	double A = this->x_pos - other.x_pos;
+	double B = this->x_vel - other.x_vel;
+	double C = this->y_pos - other.y_pos;
+	double D = this->y_vel - other.y_vel;
+	double E = 2.0 * A*B*C*D - A*A*D*D - B*B*C*C +  100.0 * (B*B + D*D);
+	double F = A*B + C*D;
+	double G = sqrt(E);
+	double timeToCollision = 0.0;
+	if  (E > 0 && (-F - G) >= 0)
+		timeToCollision = (-F - G) / (B*B + D*D);
+	else 
+		timeToCollision = -1.0; 
+	return timeToCollision;
+}
