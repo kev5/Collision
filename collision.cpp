@@ -1,3 +1,5 @@
+// Copyright 2017 Keval Khara kevalk@bu.edu
+
 #include <iostream>
 #include <sstream>
 #include <math.h>
