@@ -225,3 +225,30 @@ int main(int argcount, char **argv)
 	}
 	multi.ti_count = time_count;
 	multi.final_time = multi.time_inputs[time_count - 1];
+	
+	// get input positions and velocities
+	int line_count = 0;
+	string ID, str;
+	double x, y, vx, vy;
+	char error=' ';
+	while (getline(cin,str)) {
+		if(stringstream(str) >> ID >> x >> y >> vx >> vy){
+			multi.particles[line_count] = particle();
+			multi.particles[line_count].pID = ID;
+			multi.particles[line_count].x_pos = x;
+			multi.particles[line_count].y_pos = y;
+			multi.particles[line_count].x_vel = vx;
+			multi.particles[line_count].y_vel = vy;
+		}
+		else	
+			return 1;		// invalid input
+		
+		stringstream(str) >> ID >> x >> y >> vx >> vy >> error;
+		if (error != ' ')
+			return 1;			
+		line_count++;		// extra input values
+	};
+	multi.particle_count = line_count;
+	multi.multpart_exec();	//begin
+    return 0;
+}
