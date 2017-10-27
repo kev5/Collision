@@ -60,4 +60,31 @@ else:
 				y.append(float(obj_app[i][2]))
 				vx.append(float(obj_app[i][3]))
 				vy.append(float(obj_app[i][4]))
+				
+			if len(obj_app) == 1:
+				time_list=[]
+				for i in range(1,len(sys.argv)):
+					time_list.append(float(sys.argv[i]))
+				time_list.sort()
+				for time in time_list:
+					name=[]
+					x=[]
+					y=[]
+					vx=[]
+					vy=[]
+					for i in range(0,len(obj_app)):
+						print(time)
+						name.append(obj_app[i][0])
+						x.append(float(obj_app[i][1]))
+						y.append(float(obj_app[i][2]))
+						vx.append(float(obj_app[i][3]))
+						vy.append(float(obj_app[i][4]))
+
+						x_new=x[0]+vx[0]*time
+						y_new=y[0]+vy[0]*time
+						vx_new=vx[0]
+						vy_new=vy[0]
+						obj_new=[name[0],x_new,y_new,vx_new,vy_new]
+						print(obj_new[0]+' '+str(obj_new[1])+' '+str(obj_new[2])+' '+str(obj_new[3])+' '+str(obj_new[4]))
+				sys.exit(0)
 
