@@ -187,3 +187,41 @@ void multpart::multpart_exec() {
 	}
 }
 
+int main(int argcount, char **argv)
+{
+	multpart multi;
+	double time = 0.0;
+	double temp;
+	
+	// get time inputs list
+	int time_count = 0;
+	string str_tmp;
+	for (int i = 0; i < argcount-1; i++)
+	{	
+		str_tmp = argv[i+1];
+		for (int j = 0; argv[i+1][j] != '\0'; j++){
+			if(argv[i+1][j] != '.' && (argv[i+1][j] >'9' || argv[i+1][j] < '0'))
+				return 2;
+		}
+		time = stod(argv[i+1]);
+		if (time < 0)
+			return 2;
+		else
+		{
+			multi.time_inputs[time_count] = time;
+			time_count++;
+		}
+	}
+	if (time_count == 0)
+		return 2;
+	for (int i = 0; i < time_count-1; i++) {		// sorting time inputs
+		for (int j = i+1; j < time_count; j++) {
+			if (multi.time_inputs[i] > multi.time_inputs[j]) {
+				temp = multi.time_inputs[i];
+				multi.time_inputs[i] = multi.time_inputs[j];
+				multi.time_inputs[j] = temp;
+			}
+		}
+	}
+	multi.ti_count = time_count;
+	multi.final_time = multi.time_inputs[time_count - 1];
