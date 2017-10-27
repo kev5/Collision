@@ -160,3 +160,30 @@ col2parts multpart::nextcol_time(double cur_time) {
 	}
 	return parties;
 };
+
+void multpart::print(double current_time) {
+	cout << current_time << endl;
+	for (int i = 0;i < particle_count;i++) 
+		particles[i].print();	
+};
+
+void multpart::multpart_exec() {
+	int m, n, count = 0;
+	col2parts cp;
+	while (current_time <= final_time) {
+		cp = nextcol_time(current_time);
+		nextCollisionTime = cp.collisionTime;
+		m = cp.pair[0];
+		n = cp.pair[1];
+		while (time_inputs[count]< nextCollisionTime && count < ti_count) {
+			update(time_inputs[count] - current_time);
+			current_time = time_inputs[count];
+			print(current_time);
+			count++;
+		}
+		update(nextCollisionTime - current_time);
+		particles[m].Collision(particles[n]);
+		current_time = nextCollisionTime;
+	}
+}
+
