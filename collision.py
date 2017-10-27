@@ -19,5 +19,4 @@ for i in range(1,len(sys.argv)):
 			sys.exit(2)
 	except:
 		flag_time_str = 1
-		
 		sys.exit(2)
