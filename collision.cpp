@@ -53,6 +53,25 @@ void particle:: pos_update(double dt) {
 	y_pos = y_pos + y_vel * dt;
 }
 
+void particle::print() {
+	cout << pID << ' ' << x_pos << ' ' << y_pos << ' ' << x_vel << ' ' << y_vel << endl;
+}
+// implementing the collision formula using vectors
+void particle::Collision(particle &other) {
+	Vector p1 = Vector(this->x_pos, this->y_pos);
+	Vector p2 = Vector(other.x_pos, other.y_pos);
+	Vector v1 = Vector(this->x_vel, this->y_vel);
+	Vector v2 = Vector(other.x_vel, other.y_vel);
+	Vector axis1 = (p2 - p1);
+	Vector axis2 = (p1 - p2);
+	Vector v1axis = axis1 * (v1.dot(axis1)) / this->Distance(other);
+	Vector v2axis = axis2 * (v2.dot(axis2)) / this->Distance(other);
+	this->x_vel = (v2axis + v1 - v1axis).x;
+	this->y_vel = (v2axis + v1 - v1axis).y;
+	other.x_vel = (v1axis + v2 - v2axis).x;
+	other.y_vel = (v1axis + v2 - v2axis).y;
+}
+
 double particle::Distance(const particle &other) {
 	double distance;
 	distance = pow((this->x_pos - other.x_pos),2) + pow((this->y_pos - other.y_pos),2);
@@ -74,7 +93,6 @@ double particle::timeToCollision(const particle &other) {
 		timeToCollision = -1.0; 
 	return timeToCollision;
 }
-
 // dictionary for each pair and their collision time
 struct col2parts {
 	int pair[2];
@@ -208,7 +226,7 @@ int main(int argcount, char **argv)
 	}
 	multi.ti_count = time_count;
 	multi.final_time = multi.time_inputs[time_count - 1];
-	
+
 	// get input positions and velocities
 	int line_count = 0;
 	string ID, str;
@@ -234,4 +252,4 @@ int main(int argcount, char **argv)
 	multi.particle_count = line_count;
 	multi.multpart_exec();	//begin
     return 0;
-
+}
